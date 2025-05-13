@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        @keyframes mouthOpen {
+            0% {
+                background: conic-gradient(#fc0)
+            }
+
+            50% {
+                background: conic-gradient(rgba(0, 0, 0, 0) 30deg,
+                        #fc0 30deg,
+                        #fc0 330deg,
+                        rgba(0, 0, 0, 0) 330deg);
+            }
+
+            100% {
+                background: conic-gradient(#fc0)
+            }
+        }
+
+        :root {
+            --second-height: 10%;
+            /* 定義變數 */
+        }
+
+        #clock {
+            width: 500px;
+            height: 500px;
+            background: black;
+            border-radius: 50%;
+
+            position: relative;
+            margin: auto;
+            border: 10px double blue;
+        }
+
+        #second {
+            width: 50%;
+            height: var(--second-height);
+
+            top: calc(50% - calc(var(--second-height) * 0.5));
+            left: 0%;
+
+            transform-origin: right center;
+
+            position: absolute;
+            margin: auto;
+        }
+
+        #pacman {
+            height: 100%;
+            aspect-ratio: 1 / 1;
+            border-radius: 50%;
+
+            position: absolute;
+
+            background: #fc0;
+
+            animation: mouthOpen 0.5s infinite linear;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="clock">
+        <div id="second">
+            <div id="pacman"></div>
+        </div>
+    </div>
+
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js'
+        integrity='sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=='
+        crossorigin='anonymous'></script>
+    <script>
+        const mouthOpen = () => {
+            $('#pacman').toggleClass('mouthOpen')
+        }
+
+        const clock = () => {
+            const date = new Date()
+            const h = date.getHours()
+            const m = date.getMinutes()
+            const s = date.getSeconds() + date.getMilliseconds() / 1000
+
+            console.log(`${s * 6 + 90}deg`)
+            $('#second').css('transform', `rotate(${s * 6 + 90}deg)`)
+            // elHour.style.transform = `rotate(${h * 30 + 90}deg)`
+            // elMinute.style.transform = `rotate(${m * 6 + 90}deg)`
+            // elSecond.style.transform = `rotate(${s * 6 + 90}deg)`
+        }
+        setInterval(clock, 10)
+        clock()
+
+
+    </script>
+
+</body>
+
+</html>
