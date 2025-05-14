@@ -26,6 +26,9 @@
         :root {
             --second-height: 10%;
             /* 定義變數 */
+            --dot-size-ratio: 2%;
+            --dot-dist-ratio: 45%
+                /* 點點距時鐘中心的比例*/
         }
 
         #clock {
@@ -50,6 +53,8 @@
 
             position: absolute;
             margin: auto;
+
+            /* background: lightcoral; */
         }
 
         #pacman {
@@ -63,6 +68,18 @@
 
             animation: mouthOpen 0.5s infinite linear;
         }
+
+        .dot {
+            height: var(--dot-size-ratio);
+            aspect-ratio: 1 / 1;
+            border-radius: 50%;
+
+            position: absolute;
+            top: calc(50% - calc(var(--dot-size-ratio) * 0.5));
+            left: calc(50% - calc(var(--dot-size-ratio) * 0.5));
+
+            background: #fc0;
+        }
     </style>
 </head>
 
@@ -71,27 +88,54 @@
         <div id="second">
             <div id="pacman"></div>
         </div>
+        <div id="dots">
+        </div>
     </div>
 
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js'
         integrity='sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=='
         crossorigin='anonymous'></script>
     <script>
-        const mouthOpen = () => {
-            $('#pacman').toggleClass('mouthOpen')
+        const dotDistRatio = parseFloat($(':root').css('--dot-dist-ratio')) / 100;
+
+        const renderDots = () => {
+            const origin_distance = ($('#clock').width() * dotDistRatio);
+
+            for (let i = 0; i < 60; i++) {
+                const dot = $('<div></div>');
+                dot.addClass('dot')
+                $('#dots').append(dot);
+
+                if (i == 0) {
+                    dot.css('transform', `rotate(${i * 6}deg) translateY(${-origin_distance}px) scale(2)`);
+                }
+                else {
+                    dot.css('transform', `rotate(${i * 6}deg) translateY(${-origin_distance}px)`);
+                }
+            }
         }
+
+        renderDots()
 
         const clock = () => {
             const date = new Date()
             const h = date.getHours()
             const m = date.getMinutes()
-            const s = date.getSeconds() + date.getMilliseconds() / 1000
+            const s = date.getSeconds()
+            const ss = s + date.getMilliseconds() / 1000
 
-            console.log(`${s * 6 + 90}deg`)
-            $('#second').css('transform', `rotate(${s * 6 + 90}deg)`)
+            // console.log(`${s * 6 + 90}deg`)
+            $('#second').css('transform', `rotate(${ss * 6 + 90}deg)`)
             // elHour.style.transform = `rotate(${h * 30 + 90}deg)`
             // elMinute.style.transform = `rotate(${m * 6 + 90}deg)`
             // elSecond.style.transform = `rotate(${s * 6 + 90}deg)`
+
+            // 移除點點
+            $('.dot').eq(s).css('display', 'none')
+
+            if (s == 0) {
+                $('.dot').css('display', 'block')
+            }
         }
         setInterval(clock, 10)
         clock()
